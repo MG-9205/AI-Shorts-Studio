@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { UserButton } from '@clerk/nextjs'
 function Header() {
   return (
-    <div className='p-3 px-5 flex items-center justify-between shadow-md'>
+    <div className='p-3 px-5 flex items-center justify-between shadow-md fixed w-full z-10 bg-white top-0'>
         <div className='flex gap-3 items-center'>
             <Image
             src={'/logo.svg'}

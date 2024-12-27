@@ -12,7 +12,7 @@ function dashboardLayout({children}:dashboardLayoutProps) {
         <div className=' hidden md:block fixed h-screen mt-[65px] w-64'>
             <SideNav/>
         </div>
-        <div>
+        <div className='pt-[65px]'>
             <Header/>
             <div className='md:ml-64 p-10'>
             {children}
