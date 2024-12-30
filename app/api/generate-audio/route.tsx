@@ -1,7 +1,5 @@
 import { protos, TextToSpeechClient } from "@google-cloud/text-to-speech";
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import util from "util";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/configs/FirebaseConfig";
 

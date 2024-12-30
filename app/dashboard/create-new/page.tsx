@@ -20,8 +20,10 @@ type VideoScene = {
 function CreateNew() {
     const [loading,setLoading]=useState<boolean>(false)
     const [formData, setFormData] = useState<Record<string, any>>({});
-    const[videoScript,setVideoScript]=useState()
-    const [audioFileUrl,setAudioFileUrl]=useState();
+    const[videoScript,setVideoScript]=useState<Array<VideoScene>>()
+    const [audioFileUrl,setAudioFileUrl]=useState<any>();
+    const [caption,setCaption]=useState();
+    const [imageList,setImageList]=useState<Array<any>>([])
     const onHandleInputChange:HandleInputChange=(fieldName,fieldValue)=>{
         setFormData(perv=>({
             ...perv,
@@ -57,13 +59,40 @@ function CreateNew() {
         await axios.post('/api/generate-audio',{
             text:script,
             id:id
-        }).then(resp=>{
+        }).then(async(resp)=>{
             console.log(resp.data)
             setAudioFileUrl(resp.data.Result)
+           await GenerateAudioCaption(audioFileUrl,videoScriptData)
         })
         setLoading(false)
     }
 
+    const GenerateAudioCaption=async(fileUrl:string | URL,videoScriptData:Array<VideoScene>)=>{
+        setLoading(true)
+        await axios.post('api/generate-caption',{
+            audioFileUrl:fileUrl
+        }).then(resp=>{
+            console.log(resp.data.result);
+            setCaption(resp?.data?.result)
+            resp.data.result&&GenerateImage(videoScriptData)
+        })
+        setLoading(false);
+    }
+    const GenerateImage=(videoScriptData:any)=>{
+        setLoading(true)
+        let images:Array<any>=[];
+        videoScript?.forEach(async(element:VideoScene) => {
+            await axios.post('api/generate-image',{
+                prompt:element?.imageprompt
+            }).then(resp=>{
+                console.log(resp.data.result);
+                images.push(resp.data.result)
+              
+            })
+        });
+       setImageList(images)
+        setLoading(false);
+    }
   return (
     <div className='md:px-20'>
         <h2 className='font-bold text-primary text-center text-4xl'>
